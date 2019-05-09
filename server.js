@@ -5,11 +5,15 @@ const cors = require('cors');
 
 const PORT = process.env.PORT || 4000;
 
+const usersRouter = require('./routes/usersRouter');
+
 const app = express();
 
 app.use(bodyParser.json());
 app.use(logger('dev'));
 app.use(cors());
+
+app.use("/users", usersRouter);
 
 app.get('/', (req, res) => {
   try {

@@ -2,13 +2,12 @@ const { api, updateToken } = require("./apiHelper");
 
 const registerUser = async (user) => {
   try {
-    const { email, password, username, allergy } = user;
+    const { email, password, username } = user;
 
     const resp = await api.post("/users/", user);
-
     const { data } = resp;
 
-    // updateToken(data);
+    updateToken(data);
     console.log(data);
     return data;
   } catch (e) {
@@ -16,12 +15,15 @@ const registerUser = async (user) => {
   }
 };
 
-registerUser({
-  email: "dan@dan.com",
-  password: "danpass",
-  username: "dan",
-  allergy: "danallergy"
-})
+const loginUser = async ({ email, password }) => {
+  const resp = await api.post("/users/login", {
+    email,
+    password
+  });
+  const data = resp.data;
+  updateToken(data.token);
+  return resp.data;
+};
 
 const verifyToken = async () => {
   const token = await localStorage.getItem("authToken");
@@ -46,16 +48,4 @@ const verifyToken = async () => {
   }
 };
 
-const loginUser = async ({ email, password }) => {
-  const resp = await api.post("/users/login", {
-    email,
-    password
-  });
-  const data = resp.data;
-
-  updateToken(data.token);
-
-  return resp.data;
-};
-
-// export { registerUser, verifyToken, loginUser };
+export { registerUser, verifyToken, loginUser };
